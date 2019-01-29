@@ -5,9 +5,9 @@
 ```bash
 # Alternatively, you can clone this repo using GitKraken
 # Clone this repository
-git clone https://github.com/electron/electron-quick-start
+git clone https://github.com/stefnotch/youtrack-diagram
 # Go into the repository
-cd electron-quick-start
+cd youtrack-diagram
 
 # Install dependencies
 npm install
