@@ -8,6 +8,10 @@
   width: 180px;
 }
 
+#chart-container .orgchart .Sprint .title {
+  background-color: lightblue;
+}
+
 #chart-container .orgchart .Open .title {
   /*You can change the color of the open nodes here*/
 }

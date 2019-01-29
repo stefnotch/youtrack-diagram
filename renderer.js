@@ -19,6 +19,10 @@ const loginButton = document.getElementById("LoginButton");
 const youtrackProjectsSelect = document.getElementById(
   "YoutrackProjectsSelect"
 );
+/**@type {HTMLInputElement} */
+const ignoreUserStoriesCheckbox = document.getElementById(
+  "IgnoreUserStoriesCheckbox"
+);
 
 /**@type {HTMLUListElement} */
 const issuesList = document.getElementById("IssuesList");
@@ -60,7 +64,8 @@ loginButton.addEventListener("click", ev => {
           .search("project: " + selected, { max: 1000 })
           .then(issues => {
             let datasource = {
-              name: selected
+              name: selected,
+              className: "Sprint"
             };
             let sprintIssues = {};
 
@@ -75,6 +80,14 @@ loginButton.addEventListener("click", ev => {
               // User Story
               let issueType = getIssueField(issue, "Type");
               if (issueType) issueType = issueType[0];
+
+              // Optionally ignroe user stories
+              if (
+                issueType == "User Story" &&
+                ignoreUserStoriesCheckbox.checked
+              ) {
+                return;
+              }
 
               // Initial Sprint
               let sprintName = getIssueField(issue, "Sprints");
@@ -98,7 +111,11 @@ loginButton.addEventListener("click", ev => {
 
               //TODO: User stories (See YouTrack - kinda like swimlanes) are usually unfinished, even if all the tasks are done!
               if (!sprintIssues[sprintName]) {
-                sprintIssues[sprintName] = { name: sprintName, children: [] };
+                sprintIssues[sprintName] = {
+                  name: sprintName,
+                  className: "Sprint",
+                  children: []
+                };
               }
               sprintIssues[sprintName].children.push({
                 name: issueName,
