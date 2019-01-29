@@ -5,6 +5,7 @@
 - [Electron](https://electronjs.org/)
 - [youtrack-rest-client](https://github.com/shanehofstetter/youtrack-rest-client)
 - [OrgChart](https://github.com/dabeng/OrgChart)
+- [Electron Packager](https://github.com/electron-userland/electron-packager)
 
 ## To Install - For Developers
 
@@ -19,6 +20,9 @@ cd youtrack-diagram
 npm install
 # Run the app
 npm start
+
+# To build it
+npm run build
 ```
 
 
