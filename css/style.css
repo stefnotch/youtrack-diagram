@@ -8,10 +8,8 @@
   width: 180px;
 }
 
-.content {
-}
-
 #chart-container .orgchart .Open .title {
+  /*You can change the color of the open nodes here*/
 }
 
 #chart-container .orgchart .InProgress .title {

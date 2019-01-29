@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const yt = require("youtrack-rest-client");
-const org = require("orgchart");
+//const org = require("orgchart");
 const usernameAndPassword = require("./js/pw");
 
 /**@type {HTMLHeadingElement} */
@@ -92,9 +92,11 @@ loginButton.addEventListener("click", ev => {
                 issueType +
                 ":" +
                 sprintName;
-              //JSON.stringify(issue);
-              issuesList.appendChild(issueElement);
+              console.log(issue);
+              // Debugging output:
+              //issuesList.appendChild(issueElement);
 
+              //TODO: User stories (See YouTrack - kinda like swimlanes) are usually unfinished, even if all the tasks are done!
               if (!sprintIssues[sprintName]) {
                 sprintIssues[sprintName] = { name: sprintName, children: [] };
               }
