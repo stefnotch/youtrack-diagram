@@ -1,4 +1,4 @@
-# Projektstrukturplan
+# Youtrack Project Structure Plan Auto-Generation 
 ![Screenshot](./Screenshot.png)
 
 ## Used Technologies and Libraries
