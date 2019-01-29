@@ -1,23 +1,21 @@
 {
-  "name": "electron-quick-start",
+  "name": "youtrack-diagram",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/stefnotch/youtrack-diagram",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Electron"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^4.0.2"
+    "electron": "^4.0.2",
+    "electron-packager": "^13.0.1"
   },
   "dependencies": {
     "jquery": "^3.3.1",
