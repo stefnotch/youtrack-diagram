@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 const yt = require("youtrack-rest-client");
 const org = require("orgchart");
+const usernameAndPassword = require("./js/pw");
 
 /**@type {HTMLHeadingElement} */
 const headerElement = document.getElementById("HeaderElement");
@@ -21,6 +22,9 @@ const youtrackProjectsSelect = document.getElementById(
 
 /**@type {HTMLUListElement} */
 const issuesList = document.getElementById("IssuesList");
+
+usernameInput.value = usernameAndPassword.username;
+passwordInput.value = usernameAndPassword.password;
 
 loginButton.addEventListener("click", ev => {
   const config = {
@@ -56,9 +60,10 @@ loginButton.addEventListener("click", ev => {
           .search("project: " + selected, { max: 1000 })
           .then(issues => {
             let datasource = {
-              name: "Projektstrukturplan",
-              title: selected
+              name: selected
             };
+            let sprintIssues = {};
+
             issues.forEach(issue => {
               // Leonie Basic Dancing
               let issueName = getIssueField(issue, "summary");
@@ -89,8 +94,18 @@ loginButton.addEventListener("click", ev => {
                 sprintName;
               //JSON.stringify(issue);
               issuesList.appendChild(issueElement);
-            });
 
+              if (!sprintIssues[sprintName]) {
+                sprintIssues[sprintName] = { name: sprintName, children: [] };
+              }
+              sprintIssues[sprintName].children.push({
+                name: issueName,
+                className: issueState.replace(/\s/g, "")
+              });
+            });
+            datasource.children = Object.keys(sprintIssues).map(
+              iss => sprintIssues[iss]
+            );
             showChart(datasource);
           });
       });
@@ -160,10 +175,10 @@ function showChart(datasource) {
         }
       ]
     };
-
+    document.querySelector("#chart-container").innerHTML = "";
     $("#chart-container").orgchart({
       data: datasource,
-      nodeContent: "title",
+      /*nodeContent: "title",*/
       verticalLevel: 3,
       visibleLevel: 4,
       pan: true,

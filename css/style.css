@@ -1,0 +1,27 @@
+#chart-container .orgchart .node .title {
+  height: 40px;
+  border-radius: 4px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+}
+#chart-container .orgchart .node {
+  width: 180px;
+}
+
+.content {
+}
+
+#chart-container .orgchart .Open .title {
+}
+
+#chart-container .orgchart .InProgress .title {
+  background-color: yellow;
+}
+
+#chart-container .orgchart .ToVerify .title {
+  background-color: greenyellow;
+}
+
+#chart-container .orgchart .Done .title {
+  background-color: greenyellow;
+}
