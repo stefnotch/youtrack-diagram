@@ -43,6 +43,7 @@ loginButton.addEventListener("click", ev => {
     youtrack.users.current().then(currentUser => {
       headerElement.innerText = currentUser.fullName;
 
+      youtrackProjectsSelect.innerHTML = "";
       // Main code
       youtrack.projects.all().then(projects => {
         projects.forEach(project => {
