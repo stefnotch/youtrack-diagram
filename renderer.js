@@ -143,58 +143,6 @@ function getIssueField(issue, fieldName) {
 
 function showChart(datasource) {
   $(function() {
-    var datascource = {
-      name: "Lao Lao",
-      title: "general manager",
-      children: [
-        { name: "Bo Miao", title: "department manager" },
-        {
-          name: "Su Miao",
-          title: "department manager",
-          children: [
-            { name: "Tie Hua", title: "senior engineer" },
-            {
-              name: "Hei Hei",
-              title: "senior engineer",
-              children: [
-                { name: "Pang Pang", title: "engineer" },
-                {
-                  name: "Dan Dan",
-                  title: "UE engineer",
-                  children: [
-                    { name: "Er Dan", title: "engineer" },
-                    {
-                      name: "San Dan",
-                      title: "engineer",
-                      children: [
-                        { name: "Si Dan", title: "intern" },
-                        { name: "Wu Dan", title: "intern" }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        { name: "Hong Miao", title: "department manager" },
-        {
-          name: "Chun Miao",
-          title: "department manager",
-          children: [
-            { name: "Bing Qin", title: "senior engineer" },
-            {
-              name: "Yue Yue",
-              title: "senior engineer",
-              children: [
-                { name: "Er Yue", title: "engineer" },
-                { name: "San Yue", title: "UE engineer" }
-              ]
-            }
-          ]
-        }
-      ]
-    };
     document.querySelector("#chart-container").innerHTML = "";
     $("#chart-container").orgchart({
       data: datasource,
