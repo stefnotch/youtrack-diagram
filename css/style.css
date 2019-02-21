@@ -1,3 +1,6 @@
+label {
+  display: block;
+}
 #chart-container .orgchart .node .title {
   height: 40px;
   border-radius: 4px;
