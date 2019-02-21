@@ -1,6 +1,7 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+const Issue = require("./Issue");
 const yt = require("youtrack-rest-client");
 //const org = require("orgchart");
 const usernameAndPassword = require("./js/pw");
@@ -22,6 +23,10 @@ const youtrackProjectsSelect = document.getElementById(
 /**@type {HTMLInputElement} */
 const ignoreUserStoriesCheckbox = document.getElementById(
   "IgnoreUserStoriesCheckbox"
+);
+/**@type {HTMLInputElement} */
+const groupByUserStoriesCheckbox = document.getElementById(
+  "GroupByUserStoriesCheckbox"
 );
 
 /**@type {HTMLUListElement} */
@@ -63,68 +68,71 @@ loginButton.addEventListener("click", ev => {
 
         youtrack.issues
           .search("project: " + selected, { max: 1000 })
-          .then(issues => {
+          .then(jsonIssues => {
             let datasource = {
               name: selected,
               className: "Sprint"
             };
-            let sprintIssues = {};
+            let chartSprints = {};
+
+            let issues = jsonIssues
+              .map(iss => Issue.fromYoutrackJson(iss))
+              .filter(iss => {
+                // Optionally ignore user stories
+                if (
+                  iss.type == "User Story" &&
+                  ignoreUserStoriesCheckbox.checked
+                ) {
+                  return false;
+                } else {
+                  return true;
+                }
+              });
 
             issues.forEach(issue => {
-              // Leonie Basic Dancing
-              let issueName = getIssueField(issue, "summary");
-              // Leonie should be able to dance
-              let issueDescription = getIssueField(issue, "description");
-              // Done
-              let issueState = getIssueField(issue, "State");
-              if (issueState) issueState = issueState[0];
-              // User Story
-              let issueType = getIssueField(issue, "Type");
-              if (issueType) issueType = issueType[0];
-
-              // Optionally ignroe user stories
-              if (
-                issueType == "User Story" &&
-                ignoreUserStoriesCheckbox.checked
-              ) {
-                return;
-              }
-
-              // Initial Sprint
-              let sprintName = getIssueField(issue, "Sprints");
-              if (sprintName) sprintName = sprintName[0];
-
-              // TODO: Chances are that an issue can be in multiple sprints...uh..
-              let issueElement = document.createElement("li");
-              issueElement.innerText =
-                issueName +
-                ":" +
-                issueDescription +
-                ":" +
-                issueState +
-                ":" +
-                issueType +
-                ":" +
-                sprintName;
-              console.log(issue);
-              // Debugging output:
-              //issuesList.appendChild(issueElement);
+              //console.log(issue);
 
               //TODO: User stories (See YouTrack - kinda like swimlanes) are usually unfinished, even if all the tasks are done!
-              if (!sprintIssues[sprintName]) {
-                sprintIssues[sprintName] = {
-                  name: sprintName,
-                  className: "Sprint",
-                  children: []
-                };
-              }
-              sprintIssues[sprintName].children.push({
-                name: issueName,
-                className: issueState.replace(/\s/g, "")
+
+              // Add the issue to the sprint's issues
+              let chartSprint = getOrCreate(
+                chartSprints,
+                issue.sprint,
+                "Sprint"
+              );
+              chartSprint.children.push({
+                name: issue.name,
+                className: issue.state.replace(/\s/g, ""),
+                issue: issue
               });
             });
-            datasource.children = Object.keys(sprintIssues).map(
-              iss => sprintIssues[iss]
+
+            if (groupByUserStoriesCheckbox.checked) {
+              //I've written prettier code
+              Object.keys(chartSprints).forEach(key => {
+                let chartSprint = chartSprints[key];
+                chartSprint.children = chartSprint.children.filter(
+                  chartIssue => {
+                    let parent = chartSprint.children.find(
+                      s => s.issue.id == chartIssue.issue.parentIssueId
+                    );
+
+                    if (parent && parent.issue.type == "User Story") {
+                      if (!parent.children) {
+                        parent.children = [];
+                      }
+                      parent.children.push(chartIssue);
+                      return false;
+                    }
+                    return true;
+                  }
+                );
+              });
+            }
+
+            // Add to thhe datasource
+            datasource.children = Object.keys(chartSprints).map(
+              iss => chartSprints[iss]
             );
             showChart(datasource);
           });
@@ -133,12 +141,16 @@ loginButton.addEventListener("click", ev => {
   });
 });
 
-function getIssueField(issue, fieldName) {
-  if (!issue) return null;
-  if (!issue.field) return null;
-  let issueField = issue.field.find(f => f.name == fieldName);
-  if (!issueField) return null;
-  return issueField.value;
+function getOrCreate(chartObject, key, className) {
+  if (!chartObject[key]) {
+    chartObject[key] = {
+      name: key,
+      className: className,
+      children: []
+    };
+  }
+
+  return chartObject[key];
 }
 
 function showChart(datasource) {
