@@ -11,10 +11,69 @@ label {
   width: 180px;
 }
 
+.orgchart .node {
+  padding-left: 15px;
+}
+/*--------------------*/
+#chart-container .orgchart .Task::before,
+#chart-container .orgchart .Bug::before,
+#chart-container .orgchart .Epic::before,
+#chart-container .orgchart .UserStory::before {
+  content: "";
+  background: lightblue;
+  left: 0px;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  font-size: 12px;
+  z-index: 1;
+  font-family: sans-serif;
+  width: 40px;
+  margin-left: 10px;
+}
+
+#chart-container .orgchart .UserStory::before {
+  content: "U.S.";
+  background: orange;
+}
+
+#chart-container .orgchart .Task::before {
+  content: "Task";
+  background: cyan;
+}
+
+#chart-container .orgchart .Bug::before {
+  content: "Bug";
+  background: rgb(240, 27, 27);
+}
+
+#chart-container .orgchart .Epic::before {
+  content: "Epic";
+  background: violet;
+}
+
+/*--------------------*/
 #chart-container .orgchart .Sprint .title {
   background-color: lightblue;
 }
 
+#chart-container .orgchart .UserStory .title {
+  /*background-color: lightblue;*/
+}
+
+#chart-container .orgchart .Task .title {
+  /*background-color: lightblue;*/
+}
+
+#chart-container .orgchart .Bug .title {
+  /*background-color: lightblue;*/
+}
+
+#chart-container .orgchart .Epic .title {
+  /*background-color: lightblue;*/
+}
+
+/*--------------------*/
 #chart-container .orgchart .Open .title {
   /*You can change the color of the open nodes here*/
 }

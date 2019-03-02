@@ -59,7 +59,7 @@ loginButton.addEventListener("click", ev => {
         });
       });
 
-      youtrackProjectsSelect.addEventListener("change", ev => {
+      youtrackProjectsSelect.addEventListener("change", async ev => {
         let selected =
           youtrackProjectsSelect.options[youtrackProjectsSelect.selectedIndex]
             .value;
@@ -76,7 +76,9 @@ loginButton.addEventListener("click", ev => {
             let chartSprints = {};
 
             let issues = jsonIssues
-              .map(iss => Issue.fromYoutrackJson(iss))
+              .map(iss => {
+                return Issue.fromYoutrackJson(iss);
+              })
               .filter(iss => {
                 // Optionally ignore user stories
                 if (
@@ -100,40 +102,40 @@ loginButton.addEventListener("click", ev => {
                 issue.sprint,
                 "Sprint"
               );
-              chartSprint.children.push({
-                name: issue.name,
-                className: issue.state.replace(/\s/g, ""),
-                issue: issue
-              });
+              chartSprint.children.push(orgchartNode(issue));
+
+              if (groupByUserStoriesCheckbox.checked) {
+                //I've written prettier code
+                Object.keys(chartSprints).forEach(key => {
+                  let chartSprint = chartSprints[key];
+                  chartSprint.children = chartSprint.children.filter(
+                    chartIssue => {
+                      let parent = chartSprint.children.find(
+                        s => s.issue.id == chartIssue.issue.parentIssueId
+                      );
+
+                      if (parent && parent.issue.type == "User Story") {
+                        if (!parent.children) {
+                          parent.children = [];
+                        }
+                        parent.children.push(chartIssue);
+                        return false;
+                      }
+                      return true;
+                    }
+                  );
+                });
+              }
+
+              // Add to thhe datasource
+              datasource.children = Object.keys(chartSprints).map(
+                iss => chartSprints[iss]
+              );
             });
 
-            if (groupByUserStoriesCheckbox.checked) {
-              //I've written prettier code
-              Object.keys(chartSprints).forEach(key => {
-                let chartSprint = chartSprints[key];
-                chartSprint.children = chartSprint.children.filter(
-                  chartIssue => {
-                    let parent = chartSprint.children.find(
-                      s => s.issue.id == chartIssue.issue.parentIssueId
-                    );
-
-                    if (parent && parent.issue.type == "User Story") {
-                      if (!parent.children) {
-                        parent.children = [];
-                      }
-                      parent.children.push(chartIssue);
-                      return false;
-                    }
-                    return true;
-                  }
-                );
-              });
-            }
-
-            // Add to thhe datasource
-            datasource.children = Object.keys(chartSprints).map(
-              iss => chartSprints[iss]
-            );
+            return datasource;
+          })
+          .then(datasource => {
             showChart(datasource);
           });
       });
@@ -151,6 +153,19 @@ function getOrCreate(chartObject, key, className) {
   }
 
   return chartObject[key];
+}
+
+/**
+ *
+ * @param {Issue} issue
+ */
+function orgchartNode(issue) {
+  return {
+    name: issue.name,
+    className:
+      issue.state.replace(/\s/g, "") + " " + issue.type.replace(/\s/g, ""),
+    issue: issue
+  };
 }
 
 function showChart(datasource) {
