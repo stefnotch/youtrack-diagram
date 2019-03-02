@@ -5,6 +5,7 @@
     <title>Hello World!</title>
     <link rel="stylesheet" href="css/jquery.orgchart.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/options.css" />
   </head>
   <body>
     <script>
@@ -12,17 +13,13 @@
     </script>
     <script type="text/javascript" src="js/jquery.orgchart.js"></script>
     <h1 id="HeaderElement">Login</h1>
-    <!--
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
--->
-    <label>Username<input type="text" id="UsernameInput"/></label>
-    <label>Password<input type="password" id="PasswordInput"/></label>
-    <button id="LoginButton">Login</button>
-
+    <div class="options">
+      <label>Username<input type="text" id="UsernameInput"/></label>
+      <label>Password<input type="password" id="PasswordInput"/></label>
+      <button id="LoginButton">Login</button>
+    </div>
     <select id="YoutrackProjectsSelect"></select>
-    <label></label>
+    <label>
       Ignore User Stories:<input type="checkbox" id="IgnoreUserStoriesCheckbox"
     /></label>
     <label>
