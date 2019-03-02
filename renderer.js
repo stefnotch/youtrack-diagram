@@ -97,7 +97,7 @@ loginButton.addEventListener("click", ev => {
               //TODO: User stories (See YouTrack - kinda like swimlanes) are usually unfinished, even if all the tasks are done!
 
               // Add the issue to the sprint's issues
-              let chartSprint = getOrCreate(
+              let chartSprint = getOrCreateSprint(
                 chartSprints,
                 issue.sprint,
                 "Sprint"
@@ -143,7 +143,7 @@ loginButton.addEventListener("click", ev => {
   });
 });
 
-function getOrCreate(chartObject, key, className) {
+function getOrCreateSprint(chartObject, key, className) {
   if (!chartObject[key]) {
     chartObject[key] = {
       name: key,
@@ -164,7 +164,8 @@ function orgchartNode(issue) {
     name: issue.name,
     className:
       issue.state.replace(/\s/g, "") + " " + issue.type.replace(/\s/g, ""),
-    issue: issue
+    issue: issue,
+    description: issue.description
   };
 }
 
@@ -177,7 +178,13 @@ function showChart(datasource) {
       verticalLevel: 3,
       visibleLevel: 4,
       pan: true,
-      zoom: true
+      zoom: true,
+      createNode: function($node, data) {
+        // https://github.com/dabeng/OrgChart/blob/master/demo/option-createNode.html
+        if (data.description) {
+          $node.prop("title", data.description);
+        }
+      }
     });
   });
 }
