@@ -9,6 +9,7 @@ See [Releases](https://github.com/stefnotch/youtrack-diagram/releases)
 - [youtrack-rest-client](https://github.com/shanehofstetter/youtrack-rest-client)
 - [OrgChart](https://github.com/dabeng/OrgChart)
 - [Electron Packager](https://github.com/electron-userland/electron-packager)
+- [AppAuth](https://github.com/openid/AppAuth-JS)
 
 ## To Install - For Developers
 
