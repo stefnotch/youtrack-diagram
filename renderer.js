@@ -1,10 +1,21 @@
+// @ ts-check
+const OAuth = require("./scripts/OAuth");
+
+let test = new OAuth(
+  "http://vm81.htl-leonding.ac.at:8080/hub",
+  "292dc221-6efa-4519-9de3-59cc86988286",
+  "YouTrack"
+);
+setTimeout(() => test.connect(), 10000);
+return;
+
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const Issue = require("./Issue");
 const yt = require("youtrack-rest-client");
 //const org = require("orgchart");
-const usernameAndPassword = require("./js/pw");
+const usernameAndPassword = require("./scripts/pw");
 
 /**@type {HTMLHeadingElement} */
 const headerElement = document.getElementById("HeaderElement");

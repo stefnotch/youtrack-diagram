@@ -16,6 +16,8 @@ class Issue {
     this.sprint = "";
     ///** @type {Issue|null} */
     this.parentIssueId = "";
+    /** @type {Issue|null} */
+    this.parentIssue = null;
   }
 
   static fromYoutrackJson(youtrackIssueJson) {
