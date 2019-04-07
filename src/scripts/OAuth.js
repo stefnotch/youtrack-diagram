@@ -19,11 +19,11 @@ const {
   NodeRequestor
 } = require("@openid/appauth/built/node_support/");
 
-const NodeBasedImplicitHandler = require("./NodeBasedImplicitHandler");
+import NodeBasedImplicitHandler from "./NodeBasedImplicitHandler.js";
 
 const requestor = new NodeRequestor();
 
-class OAuth {
+export default class OAuth {
   /**
    *
    * @param {string} openIdConnectUrl
@@ -46,11 +46,13 @@ class OAuth {
     this.authorizationHandler = new NodeBasedImplicitHandler(this.PORT);
 
     this.authorizationHandler.setAuthorizationNotifier(this.notifier);
+    this._authorizationCallback = null;
     this.notifier.setAuthorizationListener(async (request, response, err) => {
       console.log(request);
       console.log(response);
       console.log(err);
 
+      this._authorizationCallback(response.code);
       // My OAuth token:
       //response.code
 
@@ -77,7 +79,13 @@ class OAuth {
   async connect() {
     let configuration = await this.fetchServiceConfiguration();
     this.configuration = configuration;
-    this.makeAuthorizationRequest(configuration);
+
+    return new Promise(resolve => {
+      this._authorizationCallback = token => {
+        resolve(token);
+      };
+      this.makeAuthorizationRequest(configuration);
+    });
   }
 
   /**
@@ -159,5 +167,3 @@ class OAuth {
     );
   }
 }
-
-module.exports = OAuth;

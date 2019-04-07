@@ -38,7 +38,7 @@ class ServerEventsEmitter extends EventEmitter {}
 ServerEventsEmitter.ON_UNABLE_TO_START = "unable_to_start";
 ServerEventsEmitter.ON_AUTHORIZATION_RESPONSE = "authorization_response";
 
-module.exports = class NodeBasedImplicitHandler extends AuthorizationRequestHandler {
+export default class NodeBasedImplicitHandler extends AuthorizationRequestHandler {
   constructor(
     // default to port 8000
     httpServerPort = 8000,
@@ -81,10 +81,10 @@ module.exports = class NodeBasedImplicitHandler extends AuthorizationRequestHand
           <script>
             let url =  new URL("${request.redirectUri}");
             url.searchParams.append('code', document.URL.match("#access_token=([^&]+)")[1]);
-            fetch(url);
+            fetch(url).then((res) => { headerElement.innerText = "You can close this window." });
           </script>
         </head>
-        <h1>Sending token to Electron...</h1>`,
+        <h1 id="headerElement">Sending token to Electron...</h1>`,
         "utf-8",
         () => {}
       );
@@ -131,8 +131,10 @@ module.exports = class NodeBasedImplicitHandler extends AuthorizationRequestHand
           state: state
         });
       } else {
+        let token = decodeURIComponent(code);
+        token = token.replace("+0-0-0-0-0", " 0-0-0-0-0"); // WTH, but why!
         authorizationResponse = new AuthorizationResponse({
-          code: code,
+          code: token,
           state: state
         });
       }
@@ -189,4 +191,4 @@ module.exports = class NodeBasedImplicitHandler extends AuthorizationRequestHand
 
     return this.authorizationPromise;
   }
-};
+}
