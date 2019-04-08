@@ -4,6 +4,10 @@
 ## [Download](https://github.com/stefnotch/youtrack-diagram/releases)
 See [Releases](https://github.com/stefnotch/youtrack-diagram/releases)
 
+## Common Issues
+- Firewall: You need to allow this app through the firewall for OAuth 2.0
+- Port 8080 in use: This app uses port 8080 for OAuth 2.0
+
 ## Used Technologies and Libraries
 - [Quasar](https://quasar-framework.org/)
 - [Vue.js](https://vuejs.org/)
