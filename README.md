@@ -23,9 +23,12 @@ cd youtrack-diagram
 
 # Install dependencies
 npm install
-# Run the app
-npm start
+# Run the app (Development Mode)
+npm run dev
 
 # To build it
 npm run build
+
+# Go to the built application
+cd ./dist/electron
 ```
