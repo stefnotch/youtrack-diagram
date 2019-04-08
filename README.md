@@ -5,10 +5,11 @@
 See [Releases](https://github.com/stefnotch/youtrack-diagram/releases)
 
 ## Used Technologies and Libraries
+- [Quasar](https://quasar-framework.org/)
+- [Vue.js](https://vuejs.org/)
 - [Electron](https://electronjs.org/)
 - [youtrack-rest-client](https://github.com/shanehofstetter/youtrack-rest-client)
-- [OrgChart](https://github.com/dabeng/OrgChart)
-- [Electron Packager](https://github.com/electron-userland/electron-packager)
+- [OrgChart](https://github.com/dabeng/OrgChart.js)
 - [AppAuth](https://github.com/openid/AppAuth-JS)
 
 ## To Install - For Developers
@@ -22,11 +23,12 @@ cd youtrack-diagram
 
 # Install dependencies
 npm install
-# Run the app
-npm start
+# Run the app (Development Mode)
+npm run dev
 
 # To build it
 npm run build
+
+# Go to the built application
+cd ./dist/electron
 ```
-
-
