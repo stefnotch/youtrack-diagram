@@ -12,17 +12,17 @@
     "build": "quasar build -m electron"
   },
   "dependencies": {
-    "@openid/appauth": "^1.2.2",
-    "@quasar/extras": "^1.0.0",
+    "@openid/appauth": "^1.2.3",
+    "@quasar/extras": "^1.1.1",
     "axios": "^0.18.0",
-    "quasar": "^1.0.0-beta.15",
+    "quasar": "^1.0.0-beta.20",
     "vue": "^2.6.10",
-    "vue-organization-chart": "^1.1.0",
-    "youtrack-rest-client": "^1.1.0"
+    "vue-organization-chart": "^1.1.6",
+    "youtrack-rest-client": "^1.2.0"
   },
   "devDependencies": {
-    "@quasar/app": "^1.0.0-beta.15",
-    "@quasar/cli": "^1.0.0-beta.4",
+    "@quasar/app": "^1.0.0-beta.22",
+    "@quasar/cli": "^1.0.0-beta.6",
     "@vue/eslint-config-prettier": "^4.0.1",
     "babel-eslint": "^10.0.1",
     "devtron": "^1.4.0",

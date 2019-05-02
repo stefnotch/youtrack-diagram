@@ -1,12 +1,18 @@
 <template>
   <div>
-    <div id="chart-container">No Agile Board Selected</div>
+    <div id="chart-container">
+      <span class="large-text">No Agile Board Selected</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
 @import "./../scripts/orgchart.css";
 @import "./../scripts/orgchart-custom-styles.css";
+.large-text {
+  font-size: 1.2em;
+  margin-left: 12px;
+}
 </style>
 
 <script>
@@ -28,7 +34,14 @@ import {
   getIssueField
 } from "./../scripts/FullSprint.js";
 
-function showChart(datasource) {
+/**
+ * @param {any} datasource
+ * @param {Youtrack} yt
+ * @param {string} agileId
+ */
+function showChart(datasource, yt, agileId) {
+  let baseUrl = yt.baseUrl.replace(/\/api$/i, "");
+
   document.querySelector("#chart-container").innerHTML = "";
   let orgchart = new OrgChart({
     chartContainer: "#chart-container",
@@ -44,8 +57,19 @@ function showChart(datasource) {
     createNode: function(node, data) {
       // https://github.com/dabeng/OrgChart/blob/master/demo/option-createNode.html
       if (data.description) {
-        node;
         node.setAttribute("title", data.description);
+      }
+
+      if (data.sprintId && data.issueId) {
+        let url = `${baseUrl}/agiles/${agileId}/${data.sprintId}?issue=${
+          data.issueId
+        }`;
+
+        let linkElement = document.createElement("a");
+        linkElement.target = "_blank";
+        linkElement.href = url;
+        linkElement.className = "link";
+        node.appendChild(linkElement);
       }
     }
   });
@@ -119,7 +143,7 @@ export default {
 
       console.log(datasource);
 
-      showChart(datasource);
+      showChart(datasource, this.youtrack, this.agileId);
     },
 
     /**
@@ -146,6 +170,7 @@ export default {
           name: issue.summary,
           className: `${issueState} ${issueType}`,
           issueId: issue.id,
+          sprintId: sprint.id,
           issueParentId: issueParentId,
           description: issue.description,
           children: []
