@@ -9,17 +9,25 @@
           :option-label="opt => opt.name && opt.name.replace(/project development$/i, 'PD')"
           filled
           use-input
+          hide-selected
           options-dense
           input-debounce="0"
-          label="YouTrack Agiles"
+          :label="selectedAgile.name || 'Youtrack Agiles'"
           @filter="filterAgiles"
         ></q-select>
       </div>
       <app-diagram v-bind:youtrack="youtrack" v-bind:agile-id="selectedAgile.id"></app-diagram>
     </div>
-    <div v-else>Not logged in</div>
+    <div v-else class="text-center">
+      <h6>Not logged in</h6>
+    </div>
   </div>
 </template>
+<style scoped>
+.text-center {
+  text-align: center;
+}
+</style>
 
 <script>
 import { Youtrack, ReducedAgile } from "youtrack-rest-client";
@@ -39,7 +47,7 @@ export default {
       /** @type {ReducedAgile[]} */
       agiles: [],
       /** @type {ReducedAgile} */
-      selectedAgile: "",
+      selectedAgile: {},
       agileFilter: "",
       token: ""
     };
@@ -82,7 +90,7 @@ export default {
       this.username = user.name;
       EventBus.$emit("youtrack-username", user.name);
 
-      this.agiles = await yt.agiles.all();
+      this.agiles = await yt.agiles.all({ $top: -1 });
     },
     /**
      * @param {String} val

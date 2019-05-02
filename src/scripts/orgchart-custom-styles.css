@@ -18,6 +18,39 @@
   width: 180px;
 }
 
+.orgchart .node .link {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  text-decoration: none;
+  color: black;
+
+  background-color: white;
+  border: 2px solid;
+  width: 10px;
+  height: 10px;
+}
+.orgchart .node .link::before {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  content: " ";
+  border: 3px solid white;
+}
+
+.orgchart .node .link::after {
+  position: absolute;
+  top: -12px;
+  right: -6px;
+  content: "\1f855";
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+}
+
+.orgchart .node .link:hover {
+  color: blue;
+}
 .orgchart .node {
   padding-left: 15px;
 }
