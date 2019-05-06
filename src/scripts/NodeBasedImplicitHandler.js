@@ -80,7 +80,7 @@ export default class NodeBasedImplicitHandler extends AuthorizationRequestHandle
           <meta content="utf-8" http-equiv="encoding">
           <script>
             let url =  new URL("${request.redirectUri}");
-            url.searchParams.append('code', document.URL.match("#access_token=([^&]+)")[1]);
+            url.searchParams.append('code', document.URL.match("#access_token=([^&]+)")[1].replace(/[+]/g, "%20"));
             fetch(url).then((res) => { headerElement.innerText = "You can close this window." });
           </script>
         </head>
@@ -132,7 +132,7 @@ export default class NodeBasedImplicitHandler extends AuthorizationRequestHandle
         });
       } else {
         let token = decodeURIComponent(code);
-        token = token.replace("+0-0-0-0-0", " 0-0-0-0-0"); // WTH, but why!
+        //token = token.replace("+0-0-0-0-0", " 0-0-0-0-0"); // WTH, but why!
         authorizationResponse = new AuthorizationResponse({
           code: token,
           state: state
