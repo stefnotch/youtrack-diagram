@@ -155,7 +155,9 @@ export default {
       let issueMap = new Map();
 
       // You got issues...
-      let issueDatasources = sprint.issues.map(issue => {
+      let issueDatasources = sprint.issues
+      .filter(issue => !issue.isDraft) // Remove the drafts
+      .map(issue => {
         let issueState = getIssueField(issue, "State").replace(/\s/g, "");
         let issueType = getIssueField(issue, "Type").replace(/\s/g, "");
 
