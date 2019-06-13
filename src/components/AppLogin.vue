@@ -13,12 +13,10 @@
 
 <script>
 import OAuth from "./../scripts/OAuth.js";
+import Store from "./../scripts/DataStorage.js";
 
-let authenticator = new OAuth(
-  "http://vm81.htl-leonding.ac.at:8080/hub",
-  "292dc221-6efa-4519-9de3-59cc86988286",
-  `292dc221-6efa-4519-9de3-59cc86988286 Upsource TeamCity YouTrack%20Slack%20Integration 0-0-0-0-0`
-);
+/**@type {OAuth} */
+let authenticator;
 
 export default {
   name: "app-login",
@@ -38,8 +36,23 @@ export default {
     async connect() {
       this.isConnecting = true;
       this.title = "Loading...";
-      let token = await authenticator.connect();
-
+      if (!authenticator || authenticator.PORT != Store.oAuthPort) {
+        console.log(Store.oAuthPort);
+        authenticator = new OAuth(
+          `http://vm81.htl-leonding.ac.at:8080/hub`,
+          `292dc221-6efa-4519-9de3-59cc86988286`,
+          `292dc221-6efa-4519-9de3-59cc86988286 Upsource TeamCity YouTrack%20Slack%20Integration 0-0-0-0-0`,
+          Store.oAuthPort
+        );
+      }
+      let token;
+      try {
+        token = await authenticator.connect();
+      } catch (e) {
+        console.error(e);
+        this.isConnecting = false;
+        return;
+      }
       this.isConnecting = false;
       this.title = "Logged In";
 

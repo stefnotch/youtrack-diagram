@@ -29,12 +29,13 @@ export default class OAuth {
    * @param {string} openIdConnectUrl
    * @param {string} clientId
    * @param {string} scope
+   * @param {number} port
    */
-  constructor(openIdConnectUrl, clientId, scope) {
+  constructor(openIdConnectUrl, clientId, scope, port) {
     this.openIdConnectUrl = openIdConnectUrl;
     this.clientId = clientId;
     this.scope = scope;
-    this.PORT = 8080;
+    this.PORT = port;
 
     /**
      * @type {AuthorizationServiceConfiguration|undefined}

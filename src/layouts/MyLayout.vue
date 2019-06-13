@@ -31,6 +31,19 @@
             <q-item-label caption>youtrack-diagram by Stefnotch</q-item-label>
           </q-item-section>
         </q-item>
+
+        <q-item-label header>Settings</q-item-label>
+        <q-item>
+          <q-item-section>
+            <q-item-label>
+              <q-select
+                v-model="store.oAuthPort"
+                :options="store.validOAuthPorts"
+                label="OAuth Port"
+              />
+            </q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -44,6 +57,7 @@
 import { openURL } from "quasar";
 import AppLogin from "components/AppLogin.vue";
 import EventBus from "./../scripts/EventBus.js";
+import Store from "./../scripts/DataStorage.js";
 
 export default {
   name: "MyLayout",
@@ -52,9 +66,10 @@ export default {
   },
   data() {
     return {
-      leftDrawerOpen: this.$q.platform.is.desktop,
+      leftDrawerOpen: false,
       token: "",
-      username: ""
+      username: "",
+      store: Store
     };
   },
   mounted: function() {
