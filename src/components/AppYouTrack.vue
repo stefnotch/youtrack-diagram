@@ -79,7 +79,7 @@ export default {
 
       console.log(token);
       const config = {
-        baseUrl: "http://vm81.htl-leonding.ac.at:8080", //"http://10.191.112.81:8080",
+        baseUrl: "http://vm81.htl-leonding.ac.at", //"http://10.191.112.81",
         token: token
       };
       let yt = new Youtrack(config);

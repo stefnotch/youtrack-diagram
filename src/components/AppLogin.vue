@@ -39,7 +39,7 @@ export default {
       if (!authenticator || authenticator.PORT != Store.oAuthPort) {
         console.log(Store.oAuthPort);
         authenticator = new OAuth(
-          `http://vm81.htl-leonding.ac.at:8080/hub`,
+          `http://vm81.htl-leonding.ac.at/hub`,
           `292dc221-6efa-4519-9de3-59cc86988286`,
           `292dc221-6efa-4519-9de3-59cc86988286 Upsource TeamCity YouTrack%20Slack%20Integration 0-0-0-0-0`,
           Store.oAuthPort
