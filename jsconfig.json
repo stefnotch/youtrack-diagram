@@ -1,5 +1,8 @@
 {
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "compilerOptions": {
+    "resolveJsonModule": true
+  }
   /*"compilerOptions": {
     "baseUrl": ".",
     "paths": {

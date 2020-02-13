@@ -16,6 +16,7 @@
 
     <q-drawer v-model="leftDrawerOpen" bordered content-class="bg-grey-2">
       <q-list>
+        <q-item-label header>YouTrack Diagram - Version {{version}}</q-item-label>
         <q-item-label header>GitHub</q-item-label>
         <q-item
           clickable
@@ -54,6 +55,7 @@
 </template>
 
 <script>
+import { version } from './../../package.json';
 import { openURL } from "quasar";
 import AppLogin from "components/AppLogin.vue";
 import EventBus from "./../scripts/EventBus.js";
@@ -69,7 +71,8 @@ export default {
       leftDrawerOpen: false,
       token: "",
       username: "",
-      store: Store
+      store: Store,
+      version: version
     };
   },
   mounted: function() {
