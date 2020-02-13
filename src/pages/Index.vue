@@ -5,7 +5,7 @@
   </q-page>
 </template>
 
-<style>
+<style scoped>
 .flex-column {
   flex-direction: column;
 }

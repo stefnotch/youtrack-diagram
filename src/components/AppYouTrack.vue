@@ -16,16 +16,46 @@
           @filter="filterAgiles"
         ></q-select>
       </div>
-      <app-diagram v-bind:youtrack="youtrack" v-bind:agile-id="selectedAgile.id"></app-diagram>
+      <app-diagram
+        v-bind:youtrack="youtrack"
+        v-bind:agile-id="selectedAgile.id"
+        v-bind:diagram-mode="diagramMode"
+      ></app-diagram>
     </div>
     <div v-else class="text-center">
       <h6>Not logged in</h6>
+    </div>
+
+    <div class="bottom-right">
+      <q-btn-toggle
+        v-model="diagramMode"
+        class="round-toggle"
+        no-caps
+        rounded
+        unelevated
+        toggle-color="primary"
+        color="white"
+        text-color="primary"
+        :options="[
+          {label: 'Sprint', value: 'sprint'},
+          {label: 'Epic', value: 'epic'}
+        ]"
+      />
     </div>
   </div>
 </template>
 <style scoped>
 .text-center {
   text-align: center;
+}
+.round-toggle {
+  border: 1px solid #027be3;
+}
+.bottom-right {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  margin: 1em;
 }
 </style>
 
@@ -49,7 +79,9 @@ export default {
       /** @type {ReducedAgile} */
       selectedAgile: {},
       agileFilter: "",
-      token: ""
+      token: "",
+      /** @type {"sprint"|"epic"} */
+      diagramMode: "sprint"
     };
   },
   computed: {

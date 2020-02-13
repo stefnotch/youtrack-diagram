@@ -6,8 +6,9 @@
       glossy
       @click="connect()"
       :disabled="isConnecting"
-      :color="token? 'secondary' :'negative'"
-    >Login</q-btn>
+      :color="token ? 'secondary' : 'negative'"
+      >Login</q-btn
+    >
   </div>
 </template>
 
@@ -62,9 +63,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-button {
-  height: 2em;
-}
-</style>
