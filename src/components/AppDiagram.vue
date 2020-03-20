@@ -17,6 +17,7 @@
 
 <script>
 import OrgChart from "./../scripts/orgchart.js";
+import panzoom from "panzoom";
 
 //import OrganizationChart from "vue-organization-chart";
 //import "vue-organization-chart/dist/orgchart.css";
@@ -53,8 +54,8 @@ function showChart(datasource, yt, agileId) {
     /*nodeContent: "title",*/
     verticalDepth: 3,
     depth: 5,
-    pan: true,
-    zoom: true,
+    //pan: true,
+    //zoom: true,
     /**
      * @param {HTMLElement} node
      */
@@ -75,6 +76,9 @@ function showChart(datasource, yt, agileId) {
       }
     }
   });
+
+  // And make it properly pan & zoomable
+  panzoom(orgchart.chart);
 }
 
 /**

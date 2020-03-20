@@ -14,6 +14,7 @@
   "dependencies": {
     "@openid/appauth": "^1.2.7",
     "@quasar/extras": "^1.6.0",
+    "panzoom": "^9.2.1",
     "quasar": "^1.9.10",
     "vue": "^2.6.11",
     "youtrack-rest-client": "^1.3.2"
