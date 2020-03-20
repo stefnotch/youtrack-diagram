@@ -6,6 +6,12 @@
 
 See [Releases](https://github.com/stefnotch/youtrack-diagram/releases)
 
+## Features
+
+- Sprint Tree View
+- Epic Tree View
+- Gantt Diagram View
+
 ## Common Issues
 
 - Firewall: You need to allow this app through the firewall for OAuth 2.0
