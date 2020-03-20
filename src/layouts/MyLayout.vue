@@ -1,9 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="glossy">
+    <q-header elevated>
       <q-toolbar>
         <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu">
-          <q-icon name="menu"/>
+          <q-icon name="menu" />
         </q-btn>
 
         <q-toolbar-title>Welcome {{username}}</q-toolbar-title>
@@ -25,7 +25,7 @@
           href="https://github.com/stefnotch/youtrack-diagram"
         >
           <q-item-section avatar>
-            <img src="statics/GitHub-Mark-64px.png" width="32">
+            <img src="statics/GitHub-Mark-64px.png" width="32" />
           </q-item-section>
           <q-item-section>
             <q-item-label>GitHub Repo</q-item-label>
@@ -49,13 +49,13 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view/>
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { version } from './../../package.json';
+import { version } from "./../../package.json";
 import { openURL } from "quasar";
 import AppLogin from "components/AppLogin.vue";
 import EventBus from "./../scripts/EventBus.js";

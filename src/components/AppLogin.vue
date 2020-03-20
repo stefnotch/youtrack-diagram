@@ -3,12 +3,10 @@
     <span>{{ title }}</span>
     <span>&nbsp;&nbsp;</span>
     <q-btn
-      glossy
       @click="connect()"
       :disabled="isConnecting"
       :color="token ? 'secondary' : 'negative'"
-      >Login</q-btn
-    >
+    >Login</q-btn>
   </div>
 </template>
 
