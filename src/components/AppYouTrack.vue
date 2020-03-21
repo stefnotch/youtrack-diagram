@@ -38,7 +38,8 @@
         text-color="primary"
         :options="[
           {label: 'Sprint', value: 'sprint'},
-          {label: 'Epic', value: 'epic'}
+          {label: 'Epic', value: 'epic'},
+          {label: 'Gantt', value: 'gantt'},
         ]"
       />
     </div>

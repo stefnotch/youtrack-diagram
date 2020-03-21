@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div id="chart-container">
+    <div id="chart-container" v-if="showTree">
       <span class="large-text">No Agile Board Selected</span>
     </div>
+    <gantt-diagram v-else :diagram-data="ganttDiagramData"></gantt-diagram>
   </div>
 </template>
 
@@ -17,10 +18,9 @@
 
 <script>
 import OrgChart from "./../scripts/orgchart.js";
+import GanttDiagram from "./GanttDiagram.vue";
 import panzoom from "panzoom";
 
-//import OrganizationChart from "vue-organization-chart";
-//import "vue-organization-chart/dist/orgchart.css";
 import {
   Youtrack,
   IssueImpl,
@@ -40,68 +40,24 @@ import {
  */
 
 /**
- * @param {any} datasource
- * @param {Youtrack} yt
- * @param {string} agileId
+ * @typedef {{name:string,items:{name:string,fromDate:Date,toDate:Date}[]}[]} GanttDiagramData
  */
-function showChart(datasource, yt, agileId) {
-  let baseUrl = yt.baseUrl.replace(/\/api$/i, "");
-
-  document.querySelector("#chart-container").innerHTML = "";
-  let orgchart = new OrgChart({
-    chartContainer: "#chart-container",
-    data: datasource,
-    /*nodeContent: "title",*/
-    verticalDepth: 3,
-    depth: 5,
-    //pan: true,
-    //zoom: true,
-    /**
-     * @param {HTMLElement} node
-     */
-    createNode: function(node, data) {
-      // https://github.com/dabeng/OrgChart/blob/master/demo/option-createNode.html
-      if (data.description) {
-        node.setAttribute("title", data.description);
-      }
-
-      if (data.sprintId && data.issueId) {
-        let url = `${baseUrl}/agiles/${agileId}/${data.sprintId}?issue=${data.issueId}`;
-
-        let linkElement = document.createElement("a");
-        linkElement.target = "_blank";
-        linkElement.href = url;
-        linkElement.className = "link";
-        node.appendChild(linkElement);
-      }
-    }
-  });
-
-  // And make it properly pan & zoomable
-  panzoom(orgchart.chart);
-}
-
-/**
- * @param {Youtrack} yt
- * @param {string} agileId
- * @param {string} sprintId
- * @returns {Promise<FullSprintImpl>}
- */
-function getFullSprintById(yt, agileId, sprintId) {
-  return yt.sprints.getResourceWithFields(
-    yt.sprints.format(SprintPaths.sprint, { agileId, sprintId }),
-    FullSprintImpl
-  );
-}
 
 export default {
   name: "app-diagram",
-  components: {},
+  components: {
+    GanttDiagram
+  },
   props: ["youtrack", "agileId", "diagramMode"],
   data() {
     return {
       /**@type {Agile} */
-      agile: undefined
+      agile: undefined,
+      /**@type {any} */
+      zoomableDiagram: null,
+      showTree: true,
+      /** @type {GanttDiagramData|null} */
+      ganttDiagramData: null
     };
   },
   watch: {
@@ -119,9 +75,10 @@ export default {
   methods: {
     /**
      * @param {String} agileId
-     * @param {"sprint"|"epic"} diagramMode
+     * @param {"sprint"|"epic"|"gantt"} diagramMode
      */
     async displayChart(agileId, diagramMode) {
+      if (agileId === null || agileId === undefined) return;
       /** @type {Youtrack} */
       let yt = this.youtrack;
 
@@ -131,6 +88,7 @@ export default {
       // TODO: If we have more than the default number/limit of issue, we might need to increase the max? options?
 
       // Agile
+      /** @type {IssueDatasource} */
       let datasource = {
         name: agile.name,
         className: "Agile",
@@ -139,11 +97,18 @@ export default {
 
       // Get the full sprints (aka sprint including the issues)
       let fullSprints = await Promise.all(
-        agile.sprints.map(sprint => getFullSprintById(yt, agile.id, sprint.id))
+        agile.sprints.map(sprint =>
+          this.getFullSprintById(yt, agile.id, sprint.id)
+        )
       );
 
-      // Sprint Tree (Orgchart)
+      if (this.zoomableDiagram) {
+        this.zoomableDiagram.dispose();
+        this.zoomableDiagram = null;
+      }
+      this.ganttDiagramData = null;
 
+      // Sprint Tree (Orgchart)
       if (!diagramMode || diagramMode == "sprint") {
         let sprintDatasources = fullSprints.map(sprint => {
           return {
@@ -154,6 +119,8 @@ export default {
         });
 
         datasource.children.push(...sprintDatasources);
+
+        this.showTreeDiagram(datasource, this.youtrack, this.agileId);
       } else if (diagramMode == "epic") {
         /** @type {IssueDatasource[]} */
         let issueDatasources = [];
@@ -165,9 +132,82 @@ export default {
 
         issueDatasources = this.issueDatasourcesToTree(issueDatasources);
         datasource.children.push(...issueDatasources);
-      }
 
-      showChart(datasource, this.youtrack, this.agileId);
+        this.showTreeDiagram(datasource, this.youtrack, this.agileId);
+      } else if (diagramMode == "gantt") {
+        this.ganttDiagramData = fullSprints
+          .filter(sprint => sprint.start && sprint.finish)
+          .map(sprint => {
+            let items = sprint.issues
+              .filter(issue => !issue.isDraft)
+              .filter(issue => {
+                return !getIssueField(issue, "Type")
+                  .toLowerCase()
+                  .replace(/[^a-z]/g, "")
+                  .includes("userstory");
+              })
+              .map(issue => {
+                return {
+                  name: issue.summary
+                };
+              });
+
+            return {
+              name: sprint.name,
+              fromDate: new Date(sprint.start),
+              toDate: new Date(sprint.finish),
+              items: items
+            };
+          });
+        this.showTree = false;
+      }
+    },
+
+    /**
+     * @param {IssueDatasource} datasource
+     * @param {Youtrack} yt
+     * @param {string} agileId
+     */
+    showTreeDiagram(datasource, yt, agileId) {
+      this.showTree = true;
+      let baseUrl = yt.baseUrl.replace(/\/api$/i, "");
+
+      this.$nextTick(() => {
+        let chartContainer = (document.querySelector(
+          "#chart-container"
+        ).innerHTML = "");
+        let orgchart = new OrgChart({
+          chartContainer: "#chart-container",
+          data: datasource,
+          /*nodeContent: "title",*/
+          verticalDepth: 3,
+          depth: 5,
+          //pan: true,
+          //zoom: true,
+          /**
+           * @param {HTMLElement} node
+           */
+          createNode: function(node, data) {
+            // https://github.com/dabeng/OrgChart/blob/master/demo/option-createNode.html
+            if (data.description) {
+              node.setAttribute("title", data.description);
+            }
+
+            if (data.sprintId && data.issueId) {
+              let url = `${baseUrl}/agiles/${agileId}/${data.sprintId}?issue=${data.issueId}`;
+
+              let linkElement = document.createElement("a");
+              linkElement.target = "_blank";
+              linkElement.href = url;
+              linkElement.className = "link";
+              node.appendChild(linkElement);
+            }
+          }
+        });
+
+        // And make it properly pan & zoomable
+        this.zoomableDiagram = panzoom(orgchart.chart);
+      });
     },
 
     /**
@@ -243,6 +283,19 @@ export default {
       });
 
       return issueDatasources;
+    },
+
+    /**
+     * @param {Youtrack} yt
+     * @param {string} agileId
+     * @param {string} sprintId
+     * @returns {Promise<FullSprintImpl>}
+     */
+    getFullSprintById(yt, agileId, sprintId) {
+      return yt.sprints.getResourceWithFields(
+        yt.sprints.format(SprintPaths.sprint, { agileId, sprintId }),
+        FullSprintImpl
+      );
     }
   }
 };
