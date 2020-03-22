@@ -1,5 +1,6 @@
 import { app, BrowserWindow, shell, Menu, ipcMain, dialog } from "electron";
 import fs from "fs";
+import { productName } from "./../../package.json";
 /**
  * Set `__statics` path to static files in production;
  * The reason we are setting it here is that the path needs to be evaluated at runtime
