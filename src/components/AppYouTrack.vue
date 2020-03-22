@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="youtrack != null">
+  <div class="flex col">
+    <div v-if="youtrack != null" class="flex column nowrap col">
       <div>
         <q-select
           v-model="selectedAgile"
@@ -17,12 +17,13 @@
         ></q-select>
       </div>
       <app-diagram
+        class="app-diagram"
         v-bind:youtrack="youtrack"
         v-bind:agile-id="selectedAgile.id"
         v-bind:diagram-mode="diagramMode"
       ></app-diagram>
     </div>
-    <div v-else class="text-center">
+    <div v-else class="text-center col">
       <h6>Not logged in</h6>
     </div>
 
@@ -57,6 +58,13 @@
   bottom: 0px;
   right: 0px;
   margin: 1em;
+}
+.app-diagram {
+  min-height: 0;
+  width: 100%;
+  flex-grow: 1;
+  flex-basis: 0;
+  overflow: hidden;
 }
 </style>
 

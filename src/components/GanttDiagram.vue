@@ -9,8 +9,9 @@
               :x1="month.x * xScale"
               :y1="0"
               :x2="month.x * xScale"
-              :y2="yScale"
+              :y2="height"
               stroke="lightgrey"
+              stroke-width="2"
             />
             <text
               :x="month.x * xScale + xScale/4"

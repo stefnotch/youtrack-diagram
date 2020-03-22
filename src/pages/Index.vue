@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-column">
+  <q-page class="flex">
     <!--v-on:login-token="1+1"-->
     <app-you-track></app-you-track>
   </q-page>
