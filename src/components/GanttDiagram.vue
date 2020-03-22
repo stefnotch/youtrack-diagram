@@ -1,6 +1,7 @@
 <template>
   <div class="diagram-container" ref="diagram">
     <svg
+      v-if="isValidData"
       class="diagram"
       :width="width"
       :height="height"
@@ -133,14 +134,22 @@ export default {
     };
   },
   computed: {
+    /** @returns {boolean} */
+    isValidData() {
+      return this.diagramData && this.diagramData.length > 0;
+    },
     /** @returns {Date} */
     startDate() {
+      if (!this.isValidData) return new Date();
+
       return this.diagramData
         .map(d => d.fromDate)
         .reduce((a, b) => (a.getTime() < b.getTime() ? a : b));
     },
     /** @returns {Date} */
     endDate() {
+      if (!this.isValidData) return new Date();
+
       // 8 days of padding after the end
       let endDate = this.diagramData
         .map(d => d.toDate)
