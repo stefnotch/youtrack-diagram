@@ -2,25 +2,43 @@
   <div class="diagram-container" ref="diagram">
     <svg class="diagram" :width="width" :height="height">
       <g class="diagram-header">
-        <!-- TODO: Months with year -->
+        <g>
+          <g v-for="(month, index) in months" :key="index">
+            <line
+              v-if="index != 0"
+              :x1="month.x * xScale"
+              :y1="0"
+              :x2="month.x * xScale"
+              :y2="yScale"
+              stroke="lightgrey"
+            />
+            <text
+              :x="month.x * xScale + xScale/4"
+              :y="yScale/2"
+              dominant-baseline="middle"
+            >{{month.name}}</text>
+          </g>
+        </g>
+        <!-- <line :x1="0" :y1="yScale" :x2="width" :y2="yScale " stroke="lightgrey" /> -->
 
-        <line :x1="0" :y1="yScale" :x2="width" :y2="yScale " stroke="lightgrey" />
-
-        <line :x1="0" :y1="yScale * 2" :x2="width" :y2="yScale * 2" stroke="lightgrey" />
-        <g v-for="(day, index) in days" :key="index">
-          <line
-            :x1="day.x * xScale"
-            :y1="yScale"
-            :x2="day.x * xScale"
-            :y2="height"
-            stroke="lightgrey"
-          />
-          <text
-            :x="day.x * xScale + xScale/2"
-            :y="yScale + yScale/2"
-            dominant-baseline="middle"
-            text-anchor="middle"
-          >{{day.name}}</text>
+        <!-- <line :x1="0" :y1="yScale * 2" :x2="width" :y2="yScale * 2" stroke="lightgrey" />-->
+        <g>
+          <g v-for="(day, index) in days" :key="index">
+            <line
+              v-if="index != 0"
+              :x1="day.x * xScale"
+              :y1="yScale"
+              :x2="day.x * xScale"
+              :y2="height"
+              stroke="lightgrey"
+            />
+            <text
+              :x="day.x * xScale + xScale/2"
+              :y="yScale + yScale/2"
+              dominant-baseline="middle"
+              text-anchor="middle"
+            >{{day.name}}</text>
+          </g>
         </g>
       </g>
       <g :transform="`translate(0,${xScale * 2.5})`">
@@ -124,20 +142,30 @@ export default {
       endDate.setDate(endDate.getDate() + 8);
       return endDate;
     },
-    /* 
-    weeks() {
-      moment(this.startDate).startOf("week")
-      console.log(this.startDate, this.endDate);
-      let weeks = new Array();
-      for (
-        let i = moment(this.startDate).week();
-        i <= moment(this.endDate).week();
-        i++
-      ) {
-        weeks.push(i);
+    /** @returns {{name:string, x:number}[]} */
+    months() {
+      let startXPosition = this.toXPosition(this.startDate);
+      let endDate = new Date(this.endDate.getTime());
+      endDate.setDate(endDate.getDate() + 1);
+      let currentDate = new Date(this.startDate.getTime());
+      let months = [];
+      let lastMonth = null;
+      while (currentDate.getTime() <= endDate.getTime()) {
+        if (currentDate.getMonth() != lastMonth) {
+          let monthName = currentDate.toLocaleString("en-US", {
+            month: "long"
+          });
+          months.push({
+            name: `${monthName} ${currentDate.getFullYear()}`,
+            x: this.toXPosition(currentDate) - startXPosition
+          });
+          lastMonth = currentDate.getMonth();
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
       }
-      return weeks;
-    },*/
+
+      return months;
+    },
     /** @returns {{name:string, x:number}[]} */
     days() {
       let startXPosition = this.toXPosition(this.startDate);
