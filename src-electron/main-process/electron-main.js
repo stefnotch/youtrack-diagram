@@ -100,7 +100,11 @@ ipcMain.on("save-screenshot", async (event, data) => {
   });
   if (!result.filePath) return;
   fs.writeFile(result.filePath, data.data, err => {
-    if (err) console.error(err);
+    if (err) {
+      console.error(err);
+    } else {
+      shell.showItemInFolder(result.filePath);
+    }
   });
 });
 

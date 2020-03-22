@@ -1,6 +1,12 @@
 <template>
   <div class="diagram-container" ref="diagram">
-    <svg class="diagram" :width="width" :height="height">
+    <svg
+      class="diagram"
+      :width="width"
+      :height="height"
+      font-size="14"
+      font-family="'Roboto','Helvetica Neue','Helvetica','Arial',sans-serif"
+    >
       <g class="diagram-header">
         <g>
           <g v-for="(month, index) in months" :key="index">

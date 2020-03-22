@@ -11,6 +11,7 @@ See [Releases](https://github.com/stefnotch/youtrack-diagram/releases)
 - Sprint Tree View
 - Epic Tree View
 - Gantt Diagram View
+- Export diagrams
 
 ## Common Issues
 

@@ -326,6 +326,19 @@ export default {
           });
       } else {
         // Save svg
+        let element = document.querySelector("svg.diagram");
+        let xml = new XMLSerializer().serializeToString(element);
+        let xmlBlob = new Blob([xml], { type: "image/svg+xml;charset=utf-8" });
+        let reader = new FileReader();
+        reader.onload = () => {
+          if (reader.readyState != 2) return;
+          ipcRenderer.send("save-screenshot", {
+            name: "screenshot",
+            extension: "svg",
+            data: Buffer.from(reader.result)
+          });
+        };
+        reader.readAsArrayBuffer(xmlBlob);
       }
     }
   }
