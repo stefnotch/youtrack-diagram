@@ -20,6 +20,8 @@
 import OrgChart from "./../scripts/orgchart.js";
 import GanttDiagram from "./GanttDiagram.vue";
 import panzoom from "panzoom";
+import { ipcRenderer } from "electron";
+import htmlToImage from "html-to-image";
 
 import {
   Youtrack,
@@ -71,6 +73,12 @@ export default {
         this.displayChart(this.agileId, value);
       }
     }
+  },
+  mounted() {
+    ipcRenderer.on("take-screenshot", this.takeScreenshot);
+  },
+  beforeDestroy() {
+    ipcRenderer.removeListener("take-screenshot", this.takeScreenshot);
   },
   methods: {
     /**
@@ -296,6 +304,29 @@ export default {
         yt.sprints.format(SprintPaths.sprint, { agileId, sprintId }),
         FullSprintImpl
       );
+    },
+
+    takeScreenshot() {
+      console.log("Taking a screenshot");
+      if (this.showTree) {
+        // Save image, rather slow
+        htmlToImage
+          .toBlob(document.querySelector("#chart-container"))
+          .then(pngBlob => {
+            let reader = new FileReader();
+            reader.onload = () => {
+              if (reader.readyState != 2) return;
+              ipcRenderer.send("save-screenshot", {
+                name: "screenshot",
+                extension: "png",
+                data: Buffer.from(reader.result)
+              });
+            };
+            reader.readAsArrayBuffer(pngBlob);
+          });
+      } else {
+        // Save svg
+      }
     }
   }
 };
