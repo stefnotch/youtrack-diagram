@@ -24,6 +24,7 @@ See [Releases](https://github.com/stefnotch/youtrack-diagram/releases)
 - [Electron](https://electronjs.org/)
 - [youtrack-rest-client](https://github.com/shanehofstetter/youtrack-rest-client)
 - [OrgChart](https://github.com/dabeng/OrgChart.js)
+- [panzoom](https://github.com/anvaka/panzoom)
 - [AppAuth](https://github.com/openid/AppAuth-JS)
 
 ## To Install - For Developers
