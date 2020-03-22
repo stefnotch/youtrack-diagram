@@ -141,7 +141,7 @@ export default {
             let items = sprint.issues
               .filter(issue => !issue.isDraft)
               .filter(issue => {
-                return !getIssueField(issue, "Type")
+                return getIssueField(issue, "Type")
                   .toLowerCase()
                   .replace(/[^a-z]/g, "")
                   .includes("userstory");
